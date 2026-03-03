@@ -1,52 +1,68 @@
-// Just for sample ..
-const text = "Secure File Sharing, Simplified.";
-const typingElement = document.querySelector(".typing");
+document.addEventListener("DOMContentLoaded", () => {
 
-let index = 0;
+    const navRight = document.getElementById("nav-right");
 
-function typeEffect() {
-    if (index < text.length) {
-        typingElement.textContent += text.charAt(index);
-        index++;
-        setTimeout(typeEffect, 120);
+    function renderNavbar() {
+
+        const token = localStorage.getItem("auth_token");
+
+        if (token) {
+
+            navRight.innerHTML = `
+                <a href="#">Upload</a>
+                <a href="#features">About</a>
+                <a href="#contact">Contact</a>
+
+                <div class="account-wrapper">
+                    <img src="/FileSheild/assets/imgs/person.png" 
+                         class="account" 
+                         id="accountBtn">
+
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <a href="/FileSheild/frontend/uploads.html">Your Uploads</a>
+                        <a href="/FileSheild/frontend/profile.html">Profile</a>
+                        <a href="/FileSheild/frontend/settings.html">Settings</a>
+                        <a href="#" id="logoutBtn">Logout</a>
+                    </div>
+                </div>
+            `;
+
+            setupDropdown();
+
+        } else {
+
+            navRight.innerHTML = `
+                <a href="#">Upload</a>
+                <a href="#features">About</a>
+                <a href="#contact">Contact</a>
+                <a href="/FileSheild/frontend/signin.html">Sign In</a>
+                <a href="/FileSheild/frontend/signup.html">Sign Up</a>
+            `;
+        }
     }
-}
 
-typeEffect();
+    function setupDropdown() {
 
+        const accountBtn = document.getElementById("accountBtn");
+        const dropdownMenu = document.getElementById("dropdownMenu");
+        const logoutBtn = document.getElementById("logoutBtn");
 
-const navRight = document.getElementById("nav-right");
-
-function renderNavbar() {
-    const isLoggedIn = localStorage.getItem("isLoggedIn");
-
-    if (isLoggedIn === "true") {
-        navRight.innerHTML = `
-            <a href="#">Upload</a>
-            <a href="#features">About</a>
-            <a href="#contact">Contact</a>
-            <img src="/assets/imgs/person.png" class="account" id="logoutBtn">
-        `;
-
-        document.getElementById("logoutBtn").addEventListener("click", () => {
-            localStorage.removeItem("isLoggedIn");
-            renderNavbar();
+        accountBtn.addEventListener("click", (e) => {
+            e.stopPropagation();
+            dropdownMenu.classList.toggle("show");
         });
 
-    } else {
-        navRight.innerHTML = `
-            <a href="#">Upload</a>
-            <a href="#features">About</a>
-            <a href="#contact">Contact</a>
-            <a href="#" id="loginBtn">Sign In</a>
-            <a href="#">Sign Up</a>
-        `;
+        logoutBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            localStorage.removeItem("auth_token");
+            window.location.href = "/FileSheild/home.html";
+        });
 
-        document.getElementById("loginBtn").addEventListener("click", () => {
-            localStorage.setItem("isLoggedIn", "true");
-            renderNavbar();
+        document.addEventListener("click", () => {
+            dropdownMenu.classList.remove("show");
         });
     }
-}
 
-renderNavbar();
+    renderNavbar();
+
+});
