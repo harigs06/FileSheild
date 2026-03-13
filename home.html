@@ -6,14 +6,14 @@
     <title>FileShield</title>
 
     <!-- Absolute path (safer for multi-page project) -->
-    <link rel="stylesheet" href="/FileSheild/frontend/css/style.css">
+    <link rel="stylesheet" href="frontend/css/style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
     <div class="navbar">
         <div class="nav-left">
-            <img src="/FileSheild/assets/imgs/logo.jpeg" alt="Logo" class="logo">
+            <img src="assets/imgs/logo.jpeg" alt="Logo" class="logo">
         </div>
 
         <div class="nav-right" id="nav-right"></div>
@@ -21,11 +21,13 @@
 
     <section class="hero" id="hero">
         <h1><span class="typing"></span></h1>
+        
         <p>
             Upload, store, and share your files with 
             FileShield <br> where sharing meets security.
         </p>
-        <button>Upload Files</button>
+        <button id="uploadBtn">Upload Files</button>
+        <input type="file" id="fileInput" style="display:none"> 
     </section>
 
     <section class="features" id="features">
@@ -50,7 +52,125 @@
         </div>
     </section>
 
-    <!-- Absolute JS path -->
-    <script src="/FileSheild/frontend/js/script.js"></script>
+    <br>
+
+   
+<section id="contact" class="contact-section">
+
+<h2>Contact FileShield</h2>
+<p class="contact-sub">We would love to hear from you. Reach out to our team anytime.</p>
+
+<div class="contact-container">
+
+<!-- CONTACT INFO -->
+
+<div class="contact-info">
+
+<h3>Support</h3>
+
+<p><strong>Email:</strong> support@fileshield.com</p>
+<p><strong>Help Desk:</strong> help@fileshield.com</p>
+<p><strong>Phone:</strong> +91 98765 43210</p>
+<p><strong>Location:</strong> Mumbai, India</p>
+
+<h3>Follow Us</h3>
+
+<div class="social-links">
+<a href="#">LinkedIn</a>
+<a href="#">GitHub</a>
+<a href="#">Twitter</a>
+</div>
+
+</div>
+
+<!-- CONTACT FORM -->
+
+<div class="contact-form">
+    <br><br>
+
+<h3>Send us a Message</h3><br>
+
+<form>
+
+<input type="text" placeholder="Your Name" required><br><br>
+
+<input type="email" placeholder="Your Email" required><br><br>
+
+<textarea placeholder="Your Message"></textarea><br><br>
+
+<button type="submit">Send Message</button><br><br>
+
+</form>
+
+</div>
+
+</div>
+
+</section>
+
+<br><br>
+<!-- TEAM SECTION -->
+
+<!-- <section class="team-section">
+
+<h2>Our Team</h2><br><br><br>
+
+<div class="team-container">
+
+<div class="team-card">
+<h3>Reshma</h3>
+<p>Founder & Full Stack Developer</p>
+</div><br>
+
+
+<div class="team-card">
+<h3>Nanda Kishore</h3>
+<p>Security Engineer</p>
+</div><br>
+
+<div class="team-card">
+<h3>Deepika</h3>
+<p>UI/UX Designer</p>
+</div>
+<br>
+<div class="team-card">
+<h3>Srinitha</h3>
+<p>Frontend Developer</p>
+</div>
+<br>
+<div class="team-card">
+<h3>Bhavya Sai</h3>
+<p>System Architect</p>
+</div> -->
+<!-- <br>
+<div class="team-card">
+<h3>Hari Ganga Sai</h3>
+<p>Backend Developer</p>
+</div><br><br>
+
+</div>
+
+</section> -->
+
+<br><br><br><br>
+<!-- FOOTER -->
+
+<footer class="footer">
+
+<p>© 2026 FileShield. All Rights Reserved.</p>
+
+<p class="copyright">
+
+FileShield is a secure file sharing platform. All website content, design,
+and source code are the intellectual property of FileShield Technologies.
+Unauthorized copying, redistribution, or modification of this website
+without permission is strictly prohibited.
+
+</p>
+
+</footer>
+<div id="toast-container"></div>
+<script src="frontend/js/script.js"></script>
+
 </body>
 </html>

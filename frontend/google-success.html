@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Login Success</title>
+</head>
+
+<body>
+
+    <script>
+
+        const params = new URLSearchParams(window.location.search);
+        
+        const token = params.get("token");
+        const first = params.get("first");
+        const last = params.get("last");
+        const email = params.get("email");
+        const verified = params.get("verified");
+        
+        if(token){
+        
+        localStorage.setItem("auth_token", token);
+        localStorage.setItem("name", first);
+        localStorage.setItem("second_name", last);
+        localStorage.setItem("email", email);
+        localStorage.setItem("is_verified", verified);
+        
+        window.location = "/FileSheild/home.html?login=success";
+        
+        }else{
+        
+        alert("Google login failed");
+        
+        }
+        
+        </script>
+
+</body>
+</html>

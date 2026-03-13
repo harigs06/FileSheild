@@ -6,11 +6,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $first_name = $_POST["first_name"];
     $last_name = $_POST["second_name"];
     $password = $_POST["password"];
-    $password2 = $_POST["password2"];
 
-    if ($password !== $password2) {
-        die("Passwords do not match");
-    }
+
 
     $conn = new mysqli("localhost","root","","FileSheild");
 
@@ -29,12 +26,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("ssss", $first_name, $last_name, $email, $hashedPassword);
 
     if ($stmt->execute()) {
-        echo "User Registered Successfully";
+        header("Location: /FileSheild/home.html?registered=true");
+        exit(); 
     } else {
         echo "Error: " . $stmt->error;
     }
 
     $stmt->close();
     $conn->close();
+
+    
 }
+
 ?>

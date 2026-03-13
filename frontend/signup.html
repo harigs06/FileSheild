@@ -1,28 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sign Up</title>
+
+<style>
+
+body{
+    margin:0;
+    padding:0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg,#4facfe,#00f2fe);
+    
+}
+
+.container{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.form-box{
+    width:350px;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 5px 20px rgba(0,0,0,0.2);
+}
+
+h1{
+    text-align:center;
+    color:#333;
+    margin-bottom:20px;
+}
+
+label{
+    font-weight:bold;
+    color:#444;
+}
+
+input[type="text"],
+input[type="password"]{
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+    margin-bottom:15px;
+    border:1px solid #ccc;
+    border-radius:5px;
+}
+
+input[type="submit"]{
+    width:100%;
+    padding:10px;
+    background:#007bff;
+    color:white;
+    border:none;
+    border-radius:5px;
+    font-size:16px;
+    cursor:pointer;
+}
+
+input[type="submit"]:hover{
+    background:#0056b3;
+}
+
+.bottom-text{
+    text-align:center;
+    margin-top:15px;
+}
+
+.bottom-text a{
+    text-decoration:none;
+    color:#007bff;
+}
+
+.bottom-text a:hover{
+    text-decoration:underline;
+}
+
+</style>
+
+<script>
+
+function validateForm(){
+
+    let fname = document.getElementById("first_name").value;
+    let sname = document.getElementById("second_name").value;
+    let email = document.getElementById("email").value;
+    let pass1 = document.getElementById("password1").value;
+    let pass2 = document.getElementById("password2").value;
+
+    if(fname == ""){
+        alert("First Name is required");
+        return false;
+    }
+
+    if(sname == ""){
+        alert("Second Name is required");
+        return false;
+    }
+
+    if(email == ""){
+        alert("Email is required");
+        return false;
+    }
+
+    let emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+    if(!email.match(emailPattern)){
+        alert("Enter a valid Email");
+        return false;
+    }
+
+    if(pass1 == ""){
+        alert("Password is required");
+        return false;
+    }
+
+    if(pass1.length < 6){
+        alert("Password must be at least 6 characters");
+        return false;
+    }
+
+    if(pass2 == ""){
+        alert("Confirm Password is required");
+        return false;
+    }
+
+    if(pass1 !== pass2){
+        alert("Passwords do not match");
+        return false;
+    }
+
+
+    return true;
+}
+
+</script>
+
 </head>
+
 <body>
-    <center>
-        <h1>Sign Up</h1>
-    <form action="/FileSheild/backend-php/signup.php" method="post" >
-        <label for="first_name">First Name :</label>
-    <input type="text" name="first_name" id="first_name">
-    <br><br>
-    <label for="second_name">Second Name :</label>
-    <input type="text" name="second_name" id="second_name"><br><br>
-    <label for="email">Email :</label>
-    <input type="text" name="email" id="email"><br> <br>
-    <label for="password1">Enter Password </label>
-    <input type="password" name="password" id="password1"><br><br>
-    <label for="password2">Enter Password </label>
-    <input type="password" name="password2" id="password2"><br><br>
-    <input type="submit" >
-    <h4>Already have Account ? <a href="signin.html">Sign In here</a></h4>
-    </form>
-    </center>
+
+<div class="container">
+
+<div class="form-box">
+
+<h1>Sign Up</h1>
+
+<form action="/FileSheild/backend-php/signup.php" method="post" onsubmit="return validateForm()">
+
+<label for="first_name">First Name :</label>
+<input type="text" name="first_name" id="first_name">
+
+<label for="second_name">Second Name :</label>
+<input type="text" name="second_name" id="second_name">
+
+<label for="email">Email :</label>
+<input type="text" name="email" id="email">
+
+<label for="password1">Enter Password :</label>
+<input type="password" name="password" id="password1">
+
+<label for="password2">Confirm Password :</label>
+<input type="password" name="password2" id="password2">
+
+<input type="submit" value="Create Account">
+
+</form>
+
+<div class="bottom-text">
+<h4>Already have Account? <a href="signin.html">Sign In here</a></h4>
+</div>
+
+</div>
+
+</div>
+
 </body>
 </html>

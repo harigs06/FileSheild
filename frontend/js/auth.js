@@ -12,7 +12,11 @@ document.querySelector("form").addEventListener("submit", async (e) => {
 
     if (result.status === "success") {
         localStorage.setItem("auth_token", result.token);
-        window.location.href = "/FileSheild/home.html";
+        localStorage.setItem("name",result.first_name);
+        localStorage.setItem("is_verified",result.is_verified);
+        localStorage.setItem("email",result.email);
+        localStorage.setItem("second_name",result.second_name);
+        window.location.href = "/FileSheild/home.html?login=success";
     } else {
         alert(result.message);
     }

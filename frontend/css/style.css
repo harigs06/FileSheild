@@ -5,8 +5,9 @@
   font-family: 'Poppins', sans-serif;
 }
 
-img {
-  max-width: 100%;
+img{
+  max-width:100%;
+  height:auto;
 }
 
 body {
@@ -28,19 +29,33 @@ body {
   justify-content: space-between;
   align-items: center;
 
-  padding: 0 40px;
+  padding: 15px 40px;
   background-color: white;
   z-index: 1000;
 }
 
+
+
+
+.hamburger{
+  display:none;
+  font-size:26px;
+  cursor:pointer;
+  color: #000;
+  padding: 0px 10px;
+  
+}
 .nav-left {
   display: flex;
   align-items: center;
 }
 
 .logo {
-  width: 100px;
-  height: 30px;
+  width: 120px;
+  height: auto;
+  object-fit: cover;
+  margin-top: 10px;
+  padding-right: 20px;
 }
 
 .nav-right {
@@ -144,4 +159,166 @@ body {
 
 .contact {
   padding: 100px 8%;
+}
+
+
+.account-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.account {
+  width: 35px;
+  cursor: pointer;
+  border-radius: 50%;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  background: white;
+  min-width: 160px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: 8px;
+  display: none;
+  flex-direction: column;
+  padding: 10px 0;
+  z-index: 1000;
+}
+
+.dropdown-menu a {
+  padding: 10px 15px;
+  text-decoration: none;
+  color: black;
+  display: block;
+}
+
+.dropdown-menu a:hover {
+  background: #f2f2f2;
+}
+
+
+
+.dropdown-menu.show {
+  display: flex;
+}
+
+
+@media (max-width:600px){
+
+  .nav-right{
+      position:absolute;
+      top:70px;
+      right:0;
+      width:100%;
+      background:white;
+      flex-direction:column;
+      align-items:center;
+      padding:20px 0;
+      display:none;
+  }
+  
+  .nav-right.show{
+      display:flex;
+  }
+  
+  .hamburger{
+      display:block;
+  }
+  
+  }
+
+
+  #toast-container{
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 9999;
+}
+
+.toast{
+    min-width: 250px;
+    padding: 14px 18px;
+    border-radius: 8px;
+    color: white;
+    font-size: 14px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease;
+}
+
+/* Toast types */
+
+.toast.success{
+    background: #2ecc71;
+}
+
+.toast.error{
+    background: #e74c3c;
+}
+
+.toast.info{
+    background: #3498db;
+}
+
+/* visible state */
+
+.toast.show{
+    opacity: 1;
+    transform: translateY(0);
+}
+.account-wrapper{
+  position: relative;
+}
+
+.avatar-info{
+  position: absolute;
+  top: 45px;
+  right: 0;
+  background: white;
+  border-radius: 8px;
+  padding: 10px 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+  font-size: 13px;
+  display: none;
+  z-index: 900;
+  width: 200px;
+}
+
+.avatar-info div:first-child{
+  font-weight: 600;
+  color: #666;
+  
+}
+
+.avatar-info div:last-child{
+  color: #666;
+  font-size: 12px;
+}
+
+/* Show only on hover */
+.account-wrapper:hover .avatar-info{
+  display: block;
+}
+
+
+.dropdown-menu.show + .avatar-info{
+  display: none;
+}
+
+
+.contact-section {
+  text-align: center;
+}
+
+.team-section{
+  text-align: center;
+}
+
+.footer{
+  text-align: center;
 }

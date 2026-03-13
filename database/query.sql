@@ -14,3 +14,4 @@ CREATE TABLE users (
 );
 
 
+ALTER TABLE users ADD COLUMN auth_token VARCHAR(255);
