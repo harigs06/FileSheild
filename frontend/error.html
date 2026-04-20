@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Error</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Arial;
+    background-color:#e6f2ff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    height:100vh;
+}
+
+.box{
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    width:350px;
+    text-align:center;
+    box-shadow:0 5px 20px rgba(0,0,0,0.2);
+}
+
+h2{ color:#333; }
+p{ color:#555; }
+
+button{
+    margin-top:15px;
+    padding:10px 20px;
+    border:none;
+    background:#007bff;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <h2>Error</h2>
+    <p id="msg">Something went wrong</p>
+    <button onclick="goBack()">Go Back</button>
+</div>
+
+<script>
+
+const params = new URLSearchParams(window.location.search);
+const message = params.get("message");
+
+if(message){
+    document.getElementById("msg").innerText = decodeURIComponent(message);
+}
+
+function goBack(){
+    window.history.back();
+}
+
+// Clean URL
+window.history.replaceState({}, document.title, "/FileSheild/frontend/error.html");
+
+</script>
+
+</body>
+</html>

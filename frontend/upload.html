@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>FileShield Upload</title>
+
+
+
+<style>
+  :root {
+    --primary: #3b82f6;
+    --primary-hover: #2563eb;
+    --bg-dark: #0f172a;
+    --card-bg: rgba(30, 41, 59, 0.7);
+    --border-color: rgba(255, 255, 255, 0.1);
+    --text-main: #f8fafc;
+    --text-dim: #94a3b8;
+  }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    background: radial-gradient(circle at top right, #1e293b, #0f172a);
+    color: var(--text-main);
+    min-height: 100vh;
+    line-height: 1.5;
+  }
+
+  /* HEADER */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    background: rgba(2, 6, 23, 0.8);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .logo {
+    color: var(--primary);
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+  }
+
+  .nav-right {
+    display: flex;
+    gap: 20px;
+  }
+
+  .nav-right a {
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-right a:hover {
+    color: var(--primary);
+  }
+
+  /* MAIN CONTAINER */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    gap: 24px;
+    padding: 24px;
+  }
+
+  /* UPLOAD BOX */
+  .upload-box {
+    flex: 2;
+    background: var(--card-bg);
+    backdrop-filter: blur(12px);
+    padding: 30px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    font-weight: 700;
+  }
+
+  #drop-area {
+    border: 2px dashed #334155;
+    background: rgba(15, 23, 42, 0.4);
+    padding: 60px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    margin-bottom: 24px;
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  #drop-area:hover {
+    border-color: var(--primary);
+    background: rgba(59, 130, 246, 0.05);
+  }
+
+  #drop-area p {
+    color: var(--text-dim);
+    margin: 0;
+  }
+
+  /* BUTTONS */
+  .upload-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  button {
+    background: var(--primary);
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: transform 0.1s, background 0.2s;
+  }
+
+  button:active {
+    transform: scale(0.98);
+  }
+
+  button:hover {
+    background: var(--primary-hover);
+  }
+
+  .upload-btn {
+    margin-top: 24px;
+    width: 100%;
+    max-width: 300px;
+    padding: 14px;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  }
+
+  /* FILE LIST */
+  .selected-files {
+    flex: 1;
+    background: var(--card-bg);
+    padding: 24px;
+    border-radius: 16px;
+    border: 1px solid var(--border-color);
+    max-height: 500px;
+    overflow-y: auto;
+  }
+
+  .selected-files h3 {
+    margin-top: 0;
+    font-size: 1.1rem;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .file {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+    font-size: 0.85rem;
+    animation: fadeIn 0.3s ease;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .file span {
+    word-break: break-all;
+    padding-right: 10px;
+    color: var(--text-dim);
+  }
+
+  .remove-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: #ef4444;
+    padding: 6px 10px;
+    font-size: 11px;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+  }
+
+  .remove-btn:hover {
+    background: #ef4444;
+    color: white;
+  }
+
+  /* RESPONSIVE MOBILE FIXES */
+  @media (max-width: 768px) {
+    header {
+      padding: 1rem;
+    }
+
+    .container {
+      flex-direction: column;
+      padding: 16px;
+      gap: 16px;
+    }
+
+    .upload-box {
+      padding: 20px;
+    }
+
+    #drop-area {
+      padding: 40px 15px;
+    }
+
+    .upload-buttons {
+      flex-direction: column;
+    }
+
+    .upload-buttons button {
+      width: 100%;
+    }
+
+    .upload-btn {
+      max-width: 100%;
+    }
+
+    .selected-files {
+      max-height: 350px;
+    }
+    
+    .logo {
+        width: 100%;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    
+    .nav-right {
+        width: 100%;
+        justify-content: center;
+        gap: 25px;
+    }
+  }
+
+  /* Custom Scrollbar for the File List */
+  .selected-files::-webkit-scrollbar {
+    width: 6px;
+  }
+  .selected-files::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 10px;
+  }
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">FileShield</div>
+
+<div class="nav-right">
+<a href="/FileSheild/home.html"><h3>Home</h3></a>
+<a href="/FileSheild/frontend/your_uploads.html"><h3>Your Uploads</h3>    </a>
+</div>
+
+</header>
+
+<div class="container">
+
+<div class="upload-box">
+
+<h2>Upload Files or Folders</h2>
+
+<div id="drop-area">
+<p>Drag & Drop Files or Folders</p>
+</div>
+
+<div class="upload-buttons">
+
+<input type="file" id="fileInput" multiple hidden>
+<button onclick="document.getElementById('fileInput').click()">
+Select Files
+</button>
+
+<input type="file" id="folderInput" webkitdirectory multiple hidden>
+<button onclick="document.getElementById('folderInput').click()">
+Select Folder
+</button>
+
+</div>
+<center>
+<button class="upload-btn" onclick="uploadFiles()">Upload</button>
+</center>
+</div>
+
+
+<div class="selected-files">
+
+<h3>Selected Files</h3>
+
+<div id="fileList"></div>
+
+</div>
+
+</div>
+
+
+<script>
+
+let selectedFiles=[];
+
+const fileInput=document.getElementById("fileInput");
+const folderInput=document.getElementById("folderInput");
+const dropArea=document.getElementById("drop-area");
+
+fileInput.addEventListener("change",function(){
+
+selectedFiles=[...selectedFiles,...this.files];
+
+renderFiles();
+
+});
+
+folderInput.addEventListener("change",function(){
+
+selectedFiles=[...selectedFiles,...this.files];
+
+renderFiles();
+
+});
+
+dropArea.addEventListener("dragover",e=>{
+e.preventDefault();
+});
+
+dropArea.addEventListener("drop",e=>{
+
+e.preventDefault();
+
+selectedFiles=[...selectedFiles,...e.dataTransfer.files];
+
+renderFiles();
+
+});
+
+
+function renderFiles(){
+
+let html="";
+
+selectedFiles.forEach((file,index)=>{
+
+let path=file.webkitRelativePath || file.name;
+
+html+=`
+<div class="file">
+
+<span>${path}</span>
+
+<button class="remove-btn" onclick="removeFile(${index})">
+Remove
+</button>
+
+</div>
+`;
+
+});
+
+document.getElementById("fileList").innerHTML=html;
+
+}
+
+
+function removeFile(index){
+
+selectedFiles.splice(index,1);
+
+renderFiles();
+
+}
+
+
+function uploadFiles(){
+
+if(selectedFiles.length===0){
+alert("Select files first");
+return;
+}
+
+const token=localStorage.getItem("auth_token");
+
+let formData=new FormData();
+
+selectedFiles.forEach(file=>{
+
+formData.append("files[]",file);
+
+let path=file.webkitRelativePath || file.name;
+
+formData.append("paths[]",path);
+
+});
+
+fetch("../backend-php/upload.php",{
+
+method:"POST",
+
+headers:{
+"Authorization":"Bearer "+token
+},
+
+body:formData
+
+})
+.then(res=>res.text())
+.then(data=>{
+
+// alert(data);
+if(data){
+  alert("Files Uploaded succesfully");
+}else{
+  alert("Failed to Upload ")
+}
+
+selectedFiles=[];
+renderFiles();
+
+});
+
+}
+
+</script>
+
+</body>
+</html>

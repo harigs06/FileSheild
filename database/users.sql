@@ -15,3 +15,14 @@ CREATE TABLE users (
 
 
 ALTER TABLE users ADD COLUMN auth_token VARCHAR(255);
+
+ALTER TABLE users MODIFY password VARCHAR(255) NULL;
+
+ALTER TABLE users ADD COLUMN google_id VARCHAR(255) NULL UNIQUE;
+
+ALTER TABLE users ADD COLUMN provider VARCHAR(50) DEFAULT 'local';
+
+
+ALTER TABLE users 
+ADD reset_token VARCHAR(255),
+ADD reset_expiry DATETIME;

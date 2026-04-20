@@ -1,38 +1,57 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="UTF-8">
 <title>Login Success</title>
 </head>
 
 <body>
 
-    <script>
+<script>
 
-        const params = new URLSearchParams(window.location.search);
-        
-        const token = params.get("token");
-        const first = params.get("first");
-        const last = params.get("last");
-        const email = params.get("email");
-        const verified = params.get("verified");
-        
-        if(token){
-        
-        localStorage.setItem("auth_token", token);
-        localStorage.setItem("name", first);
-        localStorage.setItem("second_name", last);
-        localStorage.setItem("email", email);
-        localStorage.setItem("is_verified", verified);
-        
-        window.location = "/FileSheild/home.html?login=success";
-        
-        }else{
-        
+(function(){
+
+    const params = new URLSearchParams(window.location.search);
+
+    const token = params.get("token");
+    const first = params.get("first");
+    const last = params.get("last");
+    const email = params.get("email");
+    const verified = params.get("verified");
+
+    // ✅ Validate required fields
+    if(!token || !email){
         alert("Google login failed");
-        
-        }
-        
-        </script>
+        window.location.href = "/FileSheild/signin.html";
+        return;
+    }
+
+    try {
+
+        // ✅ Store securely
+        localStorage.setItem("auth_token", token);
+        localStorage.setItem("name", first || "");
+        localStorage.setItem("second_name", last || "");
+        localStorage.setItem("email", email);
+        localStorage.setItem("is_verified", verified || "0");
+
+        // ✅ Clean URL (remove token from browser history)
+        window.history.replaceState({}, document.title, "/FileSheild/home.html");
+
+        // ✅ Redirect
+        window.location.href = "/FileSheild/home.html?login=success";
+
+    } catch (e) {
+
+        console.error("Storage error:", e);
+        alert("Something went wrong");
+        window.location.href = "/FileSheild/signin.html";
+
+    }
+
+})();
+
+</script>
 
 </body>
 </html>

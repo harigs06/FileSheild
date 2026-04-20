@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Shared Folder | FileShield</title>
+
+<style>
+body{
+margin:0;
+font-family:Segoe UI;
+background:#0d1b2a;
+color:white;
+}
+
+header{
+padding:18px 40px;
+background:#08111f;
+font-size:22px;
+color:#4da3ff;
+font-weight:bold;
+}
+
+.container{
+padding:40px;
+}
+
+.title{
+font-size:26px;
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+gap:20px;
+}
+
+.card{
+background:#1b2b44;
+padding:20px;
+border-radius:12px;
+text-align:center;
+transition:0.3s;
+}
+
+.card:hover{
+background:#243a5e;
+transform:translateY(-5px);
+}
+
+.icon{
+font-size:40px;
+margin-bottom:10px;
+}
+
+.name{
+font-size:14px;
+margin-bottom:10px;
+}
+
+button{
+padding:6px 10px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+font-size:12px;
+background:#4da3ff;
+color:white;
+}
+</style>
+
+</head>
+
+<body>
+
+<header>FileShield - Shared Folder</header>
+
+<div class="container">
+
+<div class="title" id="folderName">Loading...</div>
+
+<h3>Folders</h3>
+<div class="grid" id="foldersList"></div>
+
+<h3 style="margin-top:30px;">Files</h3>
+<div class="grid" id="filesList"></div>
+
+</div>
+
+<script>
+
+let currentToken = null;
+
+/* ================= LOAD ================= */
+
+async function loadFolder(token){
+
+currentToken = token;
+
+try{
+
+const res = await fetch(
+"/FileSheild/backend-php/folder_share.php?token=" + encodeURIComponent(token)
+);
+
+const data = await res.json();
+
+if(data.error){
+alert(data.error);
+return;
+}
+
+document.getElementById("folderName").innerText = data.folder.folder_name;
+
+/* FOLDERS */
+const foldersContainer = document.getElementById("foldersList");
+foldersContainer.innerHTML = "";
+
+data.folders.forEach(folder => {
+const card = document.createElement("div");
+card.className = "card";
+
+card.innerHTML = `
+<div class="icon">📁</div>
+<div class="name">${folder.folder_name}</div>
+<button onclick="openFolder('${folder.share_token}')">Open</button>
+`;
+
+foldersContainer.appendChild(card);
+});
+
+/* FILES */
+const filesContainer = document.getElementById("filesList");
+filesContainer.innerHTML = "";
+
+data.files.forEach(file => {
+const card = document.createElement("div");
+card.className = "card";
+
+card.innerHTML = `
+<div class="icon">📄</div>
+<div class="name">${file.display_name}</div>
+<button onclick="openFile('${file.share_token}')">Open</button>
+`;
+
+filesContainer.appendChild(card);
+});
+
+}catch(err){
+console.error(err);
+alert("Error loading folder");
+}
+
+}
+
+/* ================= NAV ================= */
+
+function openFolder(token){
+loadFolder(token);
+}
+
+/* ================= FILE ================= */
+
+function openFile(token){
+window.open("share.html?token=" + encodeURIComponent(token), "_blank");
+}
+
+/* ================= INIT ================= */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+const params = new URLSearchParams(window.location.search);
+const token = params.get("token");
+
+if(!token){
+alert("Invalid link");
+return;
+}
+
+loadFolder(token);
+
+});
+
+</script>
+
+</body>
+</html>

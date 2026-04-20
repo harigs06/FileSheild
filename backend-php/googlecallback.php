@@ -4,6 +4,7 @@ ini_set('display_errors',1);
 error_reporting(E_ALL);
 
 require '../vendor/autoload.php';
+require 'mailer.php'; //  ADD THIS
 
 $conn = new mysqli("localhost","root","","FileSheild");
 
@@ -21,100 +22,107 @@ $client->setRedirectUri("http://localhost/FileSheild/backend-php/googlecallback.
 
 if(isset($_GET['code'])){
 
-$token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+    $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
 
-if(isset($token['error'])){
-    die("OAuth failed");
-}
+    if(isset($token['error'])){
+        die("OAuth failed");
+    }
 
-$client->setAccessToken($token);
+    $client->setAccessToken($token);
 
-$service = new Google_Service_Oauth2($client);
-$user = $service->userinfo->get();
+    $service = new Google_Service_Oauth2($client);
+    $user = $service->userinfo->get();
 
-$google_id = $user->id;
-$email = $user->email;
-$name = $user->name;
+    $google_id = $user->id;
+    $email = $user->email;
+    $name = $user->name;
 
-$first = explode(" ",$name)[0];
-$last = explode(" ",$name)[1] ?? "";
+    $first = explode(" ",$name)[0];
+    $last = explode(" ",$name)[1] ?? "";
 
-
-/* Check if user already exists */
-
-$stmt = $conn->prepare("SELECT id FROM users WHERE email=? OR google_id=?");
-$stmt->bind_param("ss",$email,$google_id);
-$stmt->execute();
-
-$result = $stmt->get_result();
-
-if($result->num_rows == 0){
-
-    /* Create new Google user */
-
-    $provider = "google";
-    $password = NULL;
-    $is_verified = 1;
-
-    $stmt = $conn->prepare("
-        INSERT INTO users(first_name,last_name,email,password,google_id,provider,is_verified)
-        VALUES(?,?,?,?,?,?,?)
-    ");
-
-    $stmt->bind_param(
-        "ssssssi",
-        $first,
-        $last,
-        $email,
-        $password,
-        $google_id,
-        $provider,
-        $is_verified
-    );
-
+    // 🔍 Check user
+    $stmt = $conn->prepare("SELECT id, provider FROM users WHERE email=?");
+    $stmt->bind_param("s",$email);
     $stmt->execute();
+    $result = $stmt->get_result();
 
-    /* fetch generated user id */
+    if($result->num_rows == 0){
 
-    $getUser = $conn->prepare("SELECT id FROM users WHERE email=?");
-    $getUser->bind_param("s",$email);
-    $getUser->execute();
-    $userId = $getUser->get_result()->fetch_assoc()['id'];
+        //  NEW USER
+        $provider = "google";
+        $password = NULL;
+        $is_verified = 1;
 
-}else{
+        $stmt = $conn->prepare("
+            INSERT INTO users(first_name,last_name,email,password,google_id,provider,is_verified)
+            VALUES(?,?,?,?,?,?,?)
+        ");
 
-    $row = $result->fetch_assoc();
-    $userId = $row['id'];
+        $stmt->bind_param(
+            "ssssssi",
+            $first,
+            $last,
+            $email,
+            $password,
+            $google_id,
+            $provider,
+            $is_verified
+        );
 
-    /* ensure google id linked */
+        if($stmt->execute()){
 
-    $updateGoogle = $conn->prepare("
-        UPDATE users
-        SET google_id=?, provider='google', is_verified=1
-        WHERE id=?
-    ");
+            // SEND MAIL ONLY FOR NEW GOOGLE USER
+            $body = "
+                <h2>Welcome to FileShield 🚀</h2>
+                <p>Hi $first,</p>
+                <p>Your Google account has been successfully registered.</p>
+                <p>You can now securely use FileShield.</p>
+            ";
 
-    $updateGoogle->bind_param("ss",$google_id,$userId);
-    $updateGoogle->execute();
+            sendMail($email, "Welcome to FileShield", $body);
+        }
+
+        // Get user id
+        $getUser = $conn->prepare("SELECT id FROM users WHERE email=?");
+        $getUser->bind_param("s",$email);
+        $getUser->execute();
+        $userId = $getUser->get_result()->fetch_assoc()['id'];
+
+    } else {
+
+        $row = $result->fetch_assoc();
+        $userId = $row['id'];
+        $provider = $row['provider'];
+
+        if($provider === "local"){
+            header("Location: /FileSheild/frontend/google-error.html?error=use_password");
+            exit;
+        }
+
+        // Existing Google user
+        $updateGoogle = $conn->prepare("
+            UPDATE users
+            SET google_id=?, is_verified=1
+            WHERE id=?
+        ");
+
+        $updateGoogle->bind_param("ss",$google_id,$userId);
+        $updateGoogle->execute();
+    }
+
+    //  Generate token
+    $auth_token = bin2hex(random_bytes(32));
+
+    $update = $conn->prepare("UPDATE users SET auth_token=? WHERE id=?");
+    $update->bind_param("ss",$auth_token,$userId);
+    $update->execute();
+
+    //  Redirect
+    header("Location: /FileSheild/frontend/google-success.html?token=".$auth_token
+        ."&first=".$first
+        ."&last=".$last
+        ."&email=".$email
+        ."&verified=1");
+    exit;
 }
-
-
-/* Generate auth token */
-
-$auth_token = bin2hex(random_bytes(32));
-
-$update = $conn->prepare("UPDATE users SET auth_token=? WHERE id=?");
-$update->bind_param("ss",$auth_token,$userId);
-$update->execute();
-
-
-/* Redirect with token */
-
-header("Location: /FileSheild/frontend/google-success.html?token=".$auth_token
-."&first=".$first
-."&last=".$last
-."&email=".$email
-."&verified=1");
-exit;
-
-}
+?>

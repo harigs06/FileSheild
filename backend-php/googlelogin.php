@@ -19,7 +19,6 @@ $client->addScope("profile");
 
 $login_url = $client->createAuthUrl();
 
-/* redirect to Google */
 
 header("Location: ".$login_url);
 exit;
